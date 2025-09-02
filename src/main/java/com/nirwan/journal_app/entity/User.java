@@ -24,6 +24,8 @@ public class User {
     @NonNull
     private String password;
 
+    private List<String> roles;
+
     @DBRef //parent Child Relationship
     private List<JournalEntry> journalEntries = new ArrayList<>();
 

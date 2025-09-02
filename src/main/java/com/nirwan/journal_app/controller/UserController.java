@@ -7,8 +7,13 @@ import com.nirwan.journal_app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -20,32 +25,38 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @GetMapping
     public List<User> getAllUsers() {
         return userService.getAll();
     }
 
-    @PostMapping
-    public void createUser(@RequestBody User user) {
-        userService.saveUser(user);
-    }
 
-    @PutMapping("/{username}")
-    public ResponseEntity<?> updateUser(@RequestBody User user, @PathVariable String username) {
-        User userInDB = userService.findByUsername(username);
+    // This Works
+    @PutMapping()
+    public ResponseEntity<?> updateUser(@RequestBody User user) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        User userInDB = userService.findByUsername(authentication.getName());
 
         if (userInDB != null) {
             userInDB.setUsername(user.getUsername());
             userInDB.setPassword(user.getPassword());
         }
-        userService.saveUser(userInDB);
+        userService.updateUser(userInDB);
 
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-
+    @DeleteMapping
+    public ResponseEntity<?> deleteUserById() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        userRepository.deleteByUsername(authentication.getName());
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
 
 }
