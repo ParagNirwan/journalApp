@@ -41,15 +41,15 @@ public class JournalEntryControllerV2 {
     }
 
     //Save Entry Works
-    @PostMapping("{username}")
-    public ResponseEntity<?> createEntry(@RequestBody JournalEntry myEntry, @PathVariable String username) {
+    @PostMapping()
+    public ResponseEntity<?> createEntry(@RequestBody JournalEntry myEntry) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         try {
-            journalEntryService.saveEntry(myEntry, username);
+            journalEntryService.saveEntry(myEntry, authentication.getName());
             return ResponseEntity.status(HttpStatus.CREATED).body(myEntry);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
 
     }
 
