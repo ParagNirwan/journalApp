@@ -1,10 +1,13 @@
 package com.nirwan.journal_app.service;
 
 
+import com.nirwan.journal_app.controller.AdminController;
 import com.nirwan.journal_app.entity.JournalEntry;
 import com.nirwan.journal_app.entity.User;
 import com.nirwan.journal_app.repository.JournalEntryRepository;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,15 +26,21 @@ public class JournalEntryService {
     @Autowired
     private UserService userService;
 
+    private static final Logger logger = LoggerFactory.getLogger(JournalEntryService.class);
 
 
     @Transactional
     public void saveEntry(JournalEntry journalEntry, String username) {
-        User user = userService.findByUsername(username);
-        journalEntry.setDate(LocalDateTime.now());
-        JournalEntry saved = journalEntryRepository.save(journalEntry);
-        user.getJournalEntries().add(saved);
-        userService.updateUser(user);
+        try {
+            User user = userService.findByUsername(username);
+            journalEntry.setDate(LocalDateTime.now());
+            JournalEntry saved = journalEntryRepository.save(journalEntry);
+            user.getJournalEntries().add(saved);
+            userService.updateUser(user);
+        } catch (Exception e) {
+            logger.info("Error in saving JournalEntry");
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     public void saveEntry(JournalEntry journalEntry) {

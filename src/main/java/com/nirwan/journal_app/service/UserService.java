@@ -3,7 +3,10 @@ package com.nirwan.journal_app.service;
 import com.nirwan.journal_app.entity.JournalEntry;
 import com.nirwan.journal_app.entity.User;
 import com.nirwan.journal_app.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
+@Slf4j
 public class UserService {
 
     @Autowired
@@ -22,10 +26,19 @@ public class UserService {
     @Autowired
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
+
+
     public void createUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoles(Collections.singletonList("User"));
-        userRepository.save(user);
+        try {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setRoles(Collections.singletonList("User"));
+            userRepository.save(user);
+        } catch (Exception e) {
+            log.error("Error while saving user for {} :", user.getUsername());
+            log.debug("Error while saving user for {} :", user.getUsername());
+            //throw new RuntimeException("Error while saving user");
+        }
+
     }
 
     public void updateUser(User user) {
