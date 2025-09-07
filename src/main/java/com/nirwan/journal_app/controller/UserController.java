@@ -4,6 +4,7 @@ package com.nirwan.journal_app.controller;
 import com.nirwan.journal_app.entity.User;
 import com.nirwan.journal_app.repository.UserRepository;
 import com.nirwan.journal_app.service.UserService;
+import com.nirwan.journal_app.service.WeatherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,12 +26,23 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private WeatherService weatherService;
+
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    @GetMapping
+    @GetMapping("all-users")
     public List<User> getAllUsers() {
         return userService.getAll();
     }
+
+
+    @GetMapping
+    public ResponseEntity<?> greetings() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return new ResponseEntity<>("Hi " + authentication.getName() + ", Weather: " + weatherService.getWeather("Bhopal").getCurrent().getTemperature(), HttpStatus.OK);
+    }
+
 
 
     // This Works

@@ -1,0 +1,6 @@
+21:49:58.786 [main] INFO  c.n.journal_app.JournalApplication - Starting JournalApplication using Java 1.8.0_462 on CorpseDealer with PID 26292 (C:\Users\pnirw\Documents\journal-app\journal-app\target\classes started by pnirw in C:\Users\pnirw\Documents\journal-app\journal-app)
+21:49:58.796 [main] INFO  c.n.journal_app.JournalApplication - No active profile set, falling back to 1 default profile: "default"
+21:49:59.545 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+21:49:59.624 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 72 ms. Found 2 MongoDB repository interfaces.
+21:49:59.686 [main] INFO  c.n.journal_app.JournalApplication - Starting JournalApplication using Java 1.8.0_462 on CorpseDealer with PID 23020 (C:\Users\pnirw\Documents\journal-app\journal-app\target\classes started by pnirw in C:\Users\pnirw\Documents\journal-app\journal-app)
+21:49:59.689 [main] INFO  c.n.journal_app.JournalApplication - No active profile set, falling back to 1 default profile: "default"
