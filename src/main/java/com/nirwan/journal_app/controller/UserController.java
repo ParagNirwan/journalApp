@@ -10,11 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -29,8 +27,6 @@ public class UserController {
     @Autowired
     private WeatherService weatherService;
 
-    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
     @GetMapping("all-users")
     public List<User> getAllUsers() {
         return userService.getAll();
@@ -38,7 +34,7 @@ public class UserController {
 
 
     @GetMapping
-    public ResponseEntity<?> greetings() {
+    public ResponseEntity<String> greetings() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return new ResponseEntity<>("Hi " + authentication.getName() + ", Weather: " + weatherService.getWeather("Bhopal").getCurrent().getTemperature(), HttpStatus.OK);
     }
@@ -47,7 +43,7 @@ public class UserController {
 
     // This Works
     @PutMapping()
-    public ResponseEntity<?> updateUser(@RequestBody User user) {
+    public ResponseEntity<User> updateUser(@RequestBody User user) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -64,7 +60,7 @@ public class UserController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteUserById() {
+    public ResponseEntity<HttpStatus> deleteUserById() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         userRepository.deleteByUsername(authentication.getName());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
